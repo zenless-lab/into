@@ -23,11 +23,11 @@ type timeFormat struct {
 	typ    timeFormatType
 }
 
-func (f timeFormat) hasTimezone() bool {
-	// We don't include the formats with only named timezones, see
-	// https://github.com/golang/go/issues/19694#issuecomment-289103522
-	return f.typ >= timeFormatNumericTimezone && f.typ <= timeFormatNumericAndNamedTimezone
-}
+// func (f timeFormat) hasTimezone() bool {
+// 	// We don't include the formats with only named timezones, see
+// 	// https://github.com/golang/go/issues/19694#issuecomment-289103522
+// 	return f.typ >= timeFormatNumericTimezone && f.typ <= timeFormatNumericAndNamedTimezone
+// }
 
 var timeFormats = []timeFormat{
 	// Keep common formats at the top.

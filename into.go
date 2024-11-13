@@ -6,7 +6,31 @@ import (
 	"time"
 )
 
-func Into[U any, T any](value T) U {
+type Float interface {
+	~float64 | ~float32
+}
+
+type Int interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+
+type Uint interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
+}
+
+type String interface {
+	~string
+}
+
+type Bool interface {
+	~bool
+}
+
+type buildin interface {
+	Float | Int | Uint | String | Bool
+}
+
+func Into[U buildin, T buildin](value T) U {
 	result, err := TryInto[U, T](value)
 	if err != nil {
 		panic(err)
@@ -14,7 +38,7 @@ func Into[U any, T any](value T) U {
 	return result
 }
 
-func TryInto[U any, T any](value T) (result U, err error) {
+func TryInto[U buildin, T buildin](value T) (result U, err error) {
 	resultType := reflect.TypeOf(result)
 
 	var r any
@@ -56,14 +80,14 @@ func TryInto[U any, T any](value T) (result U, err error) {
 	default:
 		intoResult, isInto := checkAndCallInto[U](value)
 		if isInto {
-			r = intoResult
+			result = intoResult
 			return
 		}
 
 		tryIntoResult, tryIntoErr, isTryInto := checkAndCallTryInto[U](value)
 		if isTryInto {
 			if tryIntoErr == nil {
-				r = tryIntoResult
+				result = tryIntoResult
 				return
 			}
 			err = tryIntoErr
@@ -107,6 +131,11 @@ func checkAndCallTryInto[T any](value any) (result T, err error, isTryInto bool)
 	return
 }
 
+func TryIntoFloat64[T buildin](value T) (float64, error) {
+	result, err := toFloat64(value)
+	return result.(float64), err
+}
+
 func toFloat64(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -141,6 +170,11 @@ func toFloat64(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoFloat32[T buildin](value T) (float32, error) {
+	resoult, err := toFloat32(value)
+	return resoult.(float32), err
 }
 
 func toFloat32(value any) (any, error) {
@@ -179,6 +213,11 @@ func toFloat32(value any) (any, error) {
 	}
 }
 
+func TryIntoInt[T buildin](value T) (int, error) {
+	result, err := toInt(value)
+	return result.(int), err
+}
+
 func toInt(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -213,6 +252,11 @@ func toInt(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoInt8[T buildin](value T) (int8, error) {
+	result, err := toInt8(value)
+	return result.(int8), err
 }
 
 func toInt8(value any) (any, error) {
@@ -251,6 +295,11 @@ func toInt8(value any) (any, error) {
 	}
 }
 
+func TryIntoInt16[T buildin](value T) (int16, error) {
+	result, err := toInt16(value)
+	return result.(int16), err
+}
+
 func toInt16(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -285,6 +334,11 @@ func toInt16(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoInt32[T buildin](value T) (int32, error) {
+	result, err := toInt32(value)
+	return result.(int32), err
 }
 
 func toInt32(value any) (any, error) {
@@ -323,6 +377,11 @@ func toInt32(value any) (any, error) {
 	}
 }
 
+func TryIntoInt64[T buildin](value T) (int64, error) {
+	result, err := toInt64(value)
+	return result.(int64), err
+}
+
 func toInt64(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -357,6 +416,11 @@ func toInt64(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoUint[T buildin](value T) (uint, error) {
+	result, err := toUint(value)
+	return result.(uint), err
 }
 
 func toUint(value any) (any, error) {
@@ -395,6 +459,11 @@ func toUint(value any) (any, error) {
 	}
 }
 
+func TryIntoUint8[T buildin](value T) (uint8, error) {
+	result, err := toUint8(value)
+	return result.(uint8), err
+}
+
 func toUint8(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -429,6 +498,11 @@ func toUint8(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoUint16[T buildin](value T) (uint16, error) {
+	result, err := toUint16(value)
+	return result.(uint16), err
 }
 
 func toUint16(value any) (any, error) {
@@ -467,6 +541,11 @@ func toUint16(value any) (any, error) {
 	}
 }
 
+func TryIntoUint32[T buildin](value T) (uint32, error) {
+	result, err := toUint32(value)
+	return result.(uint32), err
+}
+
 func toUint32(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -501,6 +580,11 @@ func toUint32(value any) (any, error) {
 	default:
 		return 0, errors.New("unsupported type")
 	}
+}
+
+func TryIntoUint64[T buildin](value T) (uint64, error) {
+	result, err := toUint64(value)
+	return result.(uint64), err
 }
 
 func toUint64(value any) (any, error) {
@@ -539,6 +623,11 @@ func toUint64(value any) (any, error) {
 	}
 }
 
+func TryIntoString[T buildin](value T) (string, error) {
+	result, err := toString(value)
+	return result.(string), err
+}
+
 func toString(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -575,6 +664,11 @@ func toString(value any) (any, error) {
 	}
 }
 
+func TryIntoBool[T buildin](value T) (bool, error) {
+	result, err := toBool(value)
+	return result.(bool), err
+}
+
 func toBool(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -609,6 +703,11 @@ func toBool(value any) (any, error) {
 	default:
 		return false, errors.New("unsupported type")
 	}
+}
+
+func TryIntoTime[T ~string](value T) (time.Time, error) {
+	result, err := toTime(value)
+	return result.(time.Time), err
 }
 
 func toTime(value any) (any, error) {
