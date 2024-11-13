@@ -179,7 +179,7 @@ func Int8ToBool(value int8) (bool, error) {
 //
 // Returns:
 //   - bool: true if value != 0, false if value == 0
-//   - error: always nil for this function 
+//   - error: always nil for this function
 //
 // Example:
 //
