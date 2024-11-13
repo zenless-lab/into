@@ -106,6 +106,9 @@ func StringToUint(value string) (uint, error) {
 	if err != nil {
 		return 0, err
 	}
+	if i > math.MaxUint {
+		return 0, errors.New("value exceeds uint max limit")
+	}
 	return uint(i), nil
 }
 func UintToUint(value uint) (uint, error) {
