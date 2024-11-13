@@ -2,82 +2,138 @@ package into
 
 import (
 	"errors"
+	"math"
+	"reflect"
 	"strconv"
-	"time"
 )
 
-func Int8ToFloat64(value int8) (float64, error) {
-	return float64(value), nil
+func TryIntoInt8[T convertable](value T) (int8, error) {
+	result, err := toInt8(value)
+	return result.(int8), err
 }
 
-func Int8ToFloat32(value int8) (float32, error) {
-	return float32(value), nil
+func toInt8(value any) (any, error) {
+	valueType := reflect.TypeOf(value)
+	switch valueType.Kind() {
+	case reflect.Float64:
+		return Float64ToInt8(value.(float64))
+	case reflect.Float32:
+		return Float32ToInt8(value.(float32))
+	case reflect.Int:
+		return IntToInt8(value.(int))
+	case reflect.Int8:
+		return value.(int8), nil
+	case reflect.Int16:
+		return Int16ToInt8(value.(int16))
+	case reflect.Int32:
+		return Int32ToInt8(value.(int32))
+	case reflect.Int64:
+		return Int64ToInt8(value.(int64))
+	case reflect.Uint:
+		return UintToInt8(value.(uint))
+	case reflect.Uint8:
+		return Uint8ToInt8(value.(uint8))
+	case reflect.Uint16:
+		return Uint16ToInt8(value.(uint16))
+	case reflect.Uint32:
+		return Uint32ToInt8(value.(uint32))
+	case reflect.Uint64:
+		return Uint64ToInt8(value.(uint64))
+	case reflect.String:
+		return StringToInt8(value.(string))
+	case reflect.Bool:
+		return BoolToInt8(value.(bool))
+	default:
+		return 0, errors.New("unsupported type")
+	}
 }
 
-func Int8ToInt(value int8) (int, error) {
-	return int(value), nil
+func BoolToInt8(value bool) (int8, error) {
+	if value {
+		return 1, nil
+	}
+	return 0, nil
+}
+func Float32ToInt8(value float32) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
+	}
+	return int8(value), nil
+}
+func Float64ToInt8(value float64) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
+	}
+	return int8(value), nil
+}
+func IntToInt8(value int) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
+	}
+	return int8(value), nil
 }
 
 func Int8ToInt8(value int8) (int8, error) {
 	return value, nil
 }
 
-func Int8ToInt16(value int8) (int16, error) {
-	return int16(value), nil
-}
-
-func Int8ToInt32(value int8) (int32, error) {
-	return int32(value), nil
-}
-
-func Int8ToInt64(value int8) (int64, error) {
-	return int64(value), nil
-}
-
-func Int8ToUint(value int8) (uint, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint")
+func Int16ToInt8(value int16) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
 	}
-	return uint(value), nil
+	return int8(value), nil
 }
-
-func Int8ToUint8(value int8) (uint8, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint8")
+func Int32ToInt8(value int32) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
 	}
-	return uint8(value), nil
+	return int8(value), nil
 }
 
-func Int8ToUint16(value int8) (uint16, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint16")
+func Int64ToInt8(value int64) (int8, error) {
+	if value > math.MaxInt8 || value < math.MinInt8 {
+		return 0, errors.New("value out of range for int8")
 	}
-	return uint16(value), nil
+	return int8(value), nil
 }
 
-func Int8ToUint32(value int8) (uint32, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint32")
+func StringToInt8(value string) (int8, error) {
+	i, err := strconv.ParseInt(value, 10, 8)
+	if err != nil {
+		return 0, err
 	}
-	return uint32(value), nil
+	return int8(i), nil
 }
-
-func Int8ToUint64(value int8) (uint64, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint64")
+func UintToInt8(value uint) (int8, error) {
+	if value > math.MaxInt8 {
+		return 0, errors.New("value exceeds int8 max limit")
 	}
-	return uint64(value), nil
+	return int8(value), nil
 }
 
-func Int8ToString(value int8) (string, error) {
-	return strconv.Itoa(int(value)), nil
+func Uint8ToInt8(value uint8) (int8, error) {
+	if value > math.MaxInt8 {
+		return 0, errors.New("value exceeds int8 max limit")
+	}
+	return int8(value), nil
+}
+func Uint16ToInt8(value uint16) (int8, error) {
+	if value > math.MaxInt8 {
+		return 0, errors.New("value exceeds int8 max limit")
+	}
+	return int8(value), nil
 }
 
-func Int8ToBool(value int8) (bool, error) {
-	return value != 0, nil
+func Uint32ToInt8(value uint32) (int8, error) {
+	if value > math.MaxInt8 {
+		return 0, errors.New("value exceeds int8 max limit")
+	}
+	return int8(value), nil
 }
 
-func Int8ToTime(value int8) (time.Time, error) {
-	timestamp := int64(value)
-	return time.Unix(timestamp, 0), nil
+func Uint64ToInt8(value uint64) (int8, error) {
+	if value > math.MaxInt8 {
+		return 0, errors.New("value exceeds int8 max limit")
+	}
+	return int8(value), nil
 }

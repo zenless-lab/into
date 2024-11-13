@@ -3,101 +3,116 @@ package into
 import (
 	"errors"
 	"math"
+	"reflect"
 	"strconv"
-	"time"
 )
 
-func Int64ToFloat64(value int64) (float64, error) {
-	return float64(value), nil
+func TryIntoInt64[T convertable](value T) (int64, error) {
+	result, err := toInt64(value)
+	return result.(int64), err
 }
 
-func Int64ToFloat32(value int64) (float32, error) {
-	if float64(value) > math.MaxFloat32 || float64(value) < -math.MaxFloat32 {
-		return 0, errors.New("value out of range for float32")
+func toInt64(value any) (any, error) {
+	valueType := reflect.TypeOf(value)
+	switch valueType.Kind() {
+	case reflect.Float64:
+		return Float64ToInt64(value.(float64))
+	case reflect.Float32:
+		return Float32ToInt64(value.(float32))
+	case reflect.Int:
+		return IntToInt64(value.(int))
+	case reflect.Int8:
+		return Int8ToInt64(value.(int8))
+	case reflect.Int16:
+		return Int16ToInt64(value.(int16))
+	case reflect.Int32:
+		return Int32ToInt64(value.(int32))
+	case reflect.Int64:
+		return value.(int64), nil
+	case reflect.Uint:
+		return UintToInt64(value.(uint))
+	case reflect.Uint8:
+		return Uint8ToInt64(value.(uint8))
+	case reflect.Uint16:
+		return Uint16ToInt64(value.(uint16))
+	case reflect.Uint32:
+		return Uint32ToInt64(value.(uint32))
+	case reflect.Uint64:
+		return Uint64ToInt64(value.(uint64))
+	case reflect.String:
+		return StringToInt64(value.(string))
+	case reflect.Bool:
+		return BoolToInt64(value.(bool))
+	default:
+		return 0, errors.New("unsupported type")
 	}
-	return float32(value), nil
 }
 
-func Int64ToInt(value int64) (int, error) {
-	if value > math.MaxInt || value < math.MinInt {
-		return 0, errors.New("value out of range for int")
+func BoolToInt64(value bool) (int64, error) {
+	if value {
+		return 1, nil
 	}
-	return int(value), nil
+	return 0, nil
 }
 
-func Int64ToInt8(value int64) (int8, error) {
-	if value > math.MaxInt8 || value < math.MinInt8 {
-		return 0, errors.New("value out of range for int8")
+func Float32ToInt64(value float32) (int64, error) {
+	if value > math.MaxInt64 || value < math.MinInt64 {
+		return 0, errors.New("value out of range for int64")
 	}
-	return int8(value), nil
+	return int64(value), nil
 }
 
-func Int64ToInt16(value int64) (int16, error) {
-	if value > math.MaxInt16 || value < math.MinInt16 {
-		return 0, errors.New("value out of range for int16")
+func Float64ToInt64(value float64) (int64, error) {
+	if value > math.MaxInt64 || value < math.MinInt64 {
+		return 0, errors.New("value out of range for int64")
 	}
-	return int16(value), nil
+	return int64(value), nil
 }
 
-func Int64ToInt32(value int64) (int32, error) {
-	if value > math.MaxInt32 || value < math.MinInt32 {
-		return 0, errors.New("value out of range for int32")
-	}
-	return int32(value), nil
+func IntToInt64(value int) (int64, error) {
+	return int64(value), nil
+}
+
+func Int8ToInt64(value int8) (int64, error) {
+	return int64(value), nil
+}
+
+func Int16ToInt64(value int16) (int64, error) {
+	return int64(value), nil
+}
+
+func Int32ToInt64(value int32) (int64, error) {
+	return int64(value), nil
 }
 
 func Int64ToInt64(value int64) (int64, error) {
 	return value, nil
 }
 
-func Int64ToUint(value int64) (uint, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint")
+func StringToInt64(value string) (int64, error) {
+	return strconv.ParseInt(value, 10, 64)
+}
+
+func UintToInt64(value uint) (int64, error) {
+	if value > math.MaxInt64 {
+		return 0, errors.New("value exceeds int64 max limit")
 	}
-	return uint(value), nil
+	return int64(value), nil
+}
+func Uint8ToInt64(value uint8) (int64, error) {
+	return int64(value), nil
 }
 
-func Int64ToUint8(value int64) (uint8, error) {
-	if value < 0 || value > math.MaxUint8 {
-		return 0, errors.New("value out of range for uint8")
+func Uint16ToInt64(value uint16) (int64, error) {
+	return int64(value), nil
+}
+func Uint32ToInt64(value uint32) (int64, error) {
+	return int64(value), nil
+}
+
+func Uint64ToInt64(value uint64) (int64, error) {
+	if value > math.MaxInt64 {
+		return 0, errors.New("value exceeds int64 max limit")
 	}
-	return uint8(value), nil
-}
-
-func Int64ToUint16(value int64) (uint16, error) {
-	if value < 0 || value > math.MaxUint16 {
-		return 0, errors.New("value out of range for uint16")
-	}
-	return uint16(value), nil
-}
-
-func Int64ToUint32(value int64) (uint32, error) {
-	if value < 0 || value > math.MaxUint32 {
-		return 0, errors.New("value out of range for uint32")
-	}
-	return uint32(value), nil
-}
-
-func Int64ToUint64(value int64) (uint64, error) {
-	if value < 0 {
-		return 0, errors.New("negative value cannot be converted to uint64")
-	}
-	return uint64(value), nil
-}
-
-func Int64ToString(value int64) (string, error) {
-	iValue, err := Int64ToInt(value)
-	if err != nil {
-		return "", err
-	}
-	return strconv.Itoa(iValue), nil
-}
-
-func Int64ToBool(value int64) (bool, error) {
-	return value != 0, nil
-}
-
-func Int64ToTime(value int64) (time.Time, error) {
-	timestamp := value
-	return time.Unix(timestamp, 0), nil
+	return int64(value), nil
 }
