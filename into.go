@@ -5,6 +5,21 @@ import (
 	"reflect"
 )
 
+// Into converts a value of type U to a value of type T.
+//
+// Into converts a value of type U to a value of type T. If the conversion fails, it panics.
+//
+// Parameters:
+//   - value: the value to be converted. It must be a convertable type.
+//
+// Returns:
+//   - T: the converted value of type T.
+//
+// Example:
+//
+//	var a float64 = 123.456
+//	b := Into[int](a)
+//	fmt.Println(b) // Output: 123
 func Into[T convertable, U convertable](value U) T {
 	result, err := TryInto[T, U](value)
 	if err != nil {
@@ -13,6 +28,25 @@ func Into[T convertable, U convertable](value U) T {
 	return result
 }
 
+// TryInto attempts to convert a value of type U to a value of type T.
+//
+// TryInto attempts to convert a value of type U to a value of type T. If the conversion fails, it returns an error.
+//
+// Parameters:
+//   - value: the value to be converted. It must be a convertable type.
+//
+// Returns:
+//   - T: the converted value of type T.
+//   - error: an error if the conversion fails.
+//
+// Example:
+//
+//	var a float64 = 123.456
+//	b, err := TryInto[int](a)
+//	if err != nil {
+//	  log.Fatal(err)
+//	}
+//	fmt.Println(b) // Output: 123
 func TryInto[T convertable, U convertable](value U) (result T, err error) {
 	resultType := reflect.TypeOf(result)
 

@@ -6,39 +6,37 @@ import (
 	"strconv"
 )
 
-// TryIntoBool converts a value of type T into a boolean value.
+// TryIntoBool attempts to convert a value of any type to a boolean value.
 //
-// It accepts any value that implements the convertable interface which allows conversion to bool.
-// The generic type T must satisfy the convertable interface constraint.
+// TryIntoBool attempts to convert a value of any type to a boolean value.
+// It uses the `reflect` package to determine the type of the input value and
+// calls the appropriate conversion function.
 //
 // Parameters:
-//   - value: The value to convert to bool. Must be of type T that implements convertable.
+//   - value: the value to be converted. It can be any type that can be
+//		converted to a boolean, including int, float, string, and bool.
 //
 // Returns:
-//   - bool: The converted boolean value
-//   - error: An error if the conversion fails, nil if successful
-//
-// Example:
-//
-//	val := "true"
-//	b, err := TryIntoBool(val)
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	// b == true
-//
-//	val2 := 1
-//	b2, err := TryIntoBool(val2)
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	// b2 == true
+//   - bool: the converted boolean value.
+//   - error: an error if the conversion fails.
 func TryIntoBool[T convertable](value T) (bool, error) {
 	result, err := toBool(value)
 	return result.(bool), err
 }
 
-// toBool converts a value of any type to a boolean value. It is used internally by TryIntoBool.
+// toBool converts a value of any type to a boolean value.
+//
+// toBool converts a value of any type to a boolean value.
+// It uses the `reflect` package to determine the type of the input value and
+// calls the appropriate conversion function.
+//
+// Parameters:
+//   - value: the value to be converted. It can be any type that can be
+//		converted to a boolean, including int, float, string, and bool.
+//
+// Returns:
+//   - any: the converted boolean value.
+//   - error: an error if the conversion fails.
 func toBool(value any) (any, error) {
 	valueType := reflect.TypeOf(value)
 	switch valueType.Kind() {
@@ -75,274 +73,212 @@ func toBool(value any) (any, error) {
 	}
 }
 
-// BoolToBool takes a boolean value and returns it directly with no error.
-// It serves as a simple pass-through function for boolean values.
+// BoolToBool converts a boolean value to a boolean value.
+//
+// BoolToBool converts a boolean value to a boolean value.
+// It simply returns the input value without any modification.
 //
 // Parameters:
-//   - value: A boolean input value to be passed through
+//   - value: the boolean value to be converted.
 //
 // Returns:
-//   - bool: The same boolean value that was passed in
-//   - error: Always nil since this operation cannot fail
-//
-// Example:
-//
-//	result, err := BoolToBool(true)
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	fmt.Printf("Result: %v\n", result) // Output: Result: true
+//   - bool: the converted boolean value.
+//   - error: nil.
 func BoolToBool(value bool) (bool, error) {
 	return value, nil
 }
 
 // Float32ToBool converts a float32 value to a boolean value.
-// It returns true if the value is not equal to 0, false otherwise.
+//
+// Float32ToBool converts a float32 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: float32 number to be converted
+//   - value: the float32 value to be converted.
 //
 // Returns:
-//   - bool: true if value is not 0, false if value is 0
-//   - error: always returns nil (reserved for future validation)
-//
-// Example:
-//
-//	result, err := Float32ToBool(1.0)  // returns true, nil
-//	result, err := Float32ToBool(0.0)  // returns false, nil
-//	result, err := Float32ToBool(-1.0) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Float32ToBool(value float32) (bool, error) {
 	return value != 0, nil
 }
 
 // Float64ToBool converts a float64 value to a boolean value.
-// It returns true if the value is not equal to 0, false otherwise.
+//
+// Float64ToBool converts a float64 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: float64 input value to be converted
+//   - value: the float64 value to be converted.
 //
 // Returns:
-//   - bool: true if value != 0, false if value == 0
-//   - error: currently always returns nil, reserved for future validation
-//
-// Example:
-//
-//	result, err := Float64ToBool(1.0)    // returns true, nil
-//	result, err := Float64ToBool(0.0)    // returns false, nil
-//	result, err := Float64ToBool(-1.5)   // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Float64ToBool(value float64) (bool, error) {
 	return value != 0, nil
 }
 
-// IntToBool converts an integer value to a boolean.
-// It returns true if the value is non-zero, false if the value is zero.
+// IntToBool converts an int value to a boolean value.
+//
+// IntToBool converts an int value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The integer value to convert
+//   - value: the int value to be converted.
 //
 // Returns:
-//   - bool: The boolean result (true if non-zero, false if zero)
-//   - error: Always returns nil for this function
-//
-// Example:
-//
-//	b, _ := IntToBool(1)  // returns true
-//	b, _ := IntToBool(0)  // returns false
-//	b, _ := IntToBool(-1) // returns true
+//   - bool: the converted boolean value.
+//   - error: nil.
 func IntToBool(value int) (bool, error) {
 	return value != 0, nil
 }
 
-// Int8ToBool converts an int8 value to a bool.
+// Int8ToBool converts an int8 value to a boolean value.
+//
+// Int8ToBool converts an int8 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The int8 value to convert (0 or non-0)
+//   - value: the int8 value to be converted.
 //
 // Returns:
-//   - bool: true if value is non-zero, false if value is zero
-//   - error: always nil for this function
-//
-// Example:
-//
-//	b, err := Int8ToBool(1)  // returns true, nil
-//	b, err := Int8ToBool(0)  // returns false, nil
-//	b, err := Int8ToBool(-1) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Int8ToBool(value int8) (bool, error) {
 	return value != 0, nil
 }
 
-// Int16ToBool converts an int16 value to a boolean.
-// It returns true if value is not 0, false otherwise.
+// Int16ToBool converts an int16 value to a boolean value.
+//
+// Int16ToBool converts an int16 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: int16 input to convert to boolean
+//   - value: the int16 value to be converted.
 //
 // Returns:
-//   - bool: true if value != 0, false if value == 0
-//   - error: always nil for this function
-//
-// Example:
-//
-//	b, err := Int16ToBool(1)  // returns true, nil
-//	b, err := Int16ToBool(0)  // returns false, nil
-//	b, err := Int16ToBool(-1) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Int16ToBool(value int16) (bool, error) {
 	return value != 0, nil
 }
 
-// Int32ToBool converts an int32 value to a boolean.
-// It returns true if value is non-zero, false if value is zero.
+// Int32ToBool converts an int32 value to a boolean value.
+//
+// Int32ToBool converts an int32 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The int32 value to convert
+//   - value: the int32 value to be converted.
 //
 // Returns:
-//   - bool: The boolean result (true if value != 0, false if value == 0)
-//   - error: Always returns nil as this conversion cannot fail
-//
-// Example:
-//
-//	result, err := Int32ToBool(1) // returns true, nil
-//	result, err := Int32ToBool(0) // returns false, nil
-//	result, err := Int32ToBool(-1) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Int32ToBool(value int32) (bool, error) {
 	return value != 0, nil
 }
 
 // Int64ToBool converts an int64 value to a boolean value.
-// It returns true if the value is non-zero, false if the value is zero.
+//
+// Int64ToBool converts an int64 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The int64 value to convert
+//   - value: the int64 value to be converted.
 //
 // Returns:
-//   - bool: true if value is non-zero, false if value is zero
-//   - error: always returns nil (for interface consistency)
-//
-// Example:
-//
-//	b, err := Int64ToBool(1)  // returns true, nil
-//	b, err := Int64ToBool(0)  // returns false, nil
-//	b, err := Int64ToBool(-1) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Int64ToBool(value int64) (bool, error) {
 	return value != 0, nil
 }
 
-// StringToBool converts a string to a boolean value.
+// StringToBool converts a string value to a boolean value.
 //
-// The function uses strconv.ParseBool internally and accepts "1", "t", "T", "true", "TRUE", "True"
-// for true and "0", "f", "F", "false", "FALSE", "False" for false.
+// StringToBool converts a string value to a boolean value.
+// It uses the `strconv.ParseBool` function to parse the input string.
 //
 // Parameters:
-//   - value: string to be converted to boolean
+//   - value: the string value to be converted.
 //
 // Returns:
-//   - bool: the parsed boolean value
-//   - error: error if the string cannot be converted to a valid boolean
-//
-// Example:
-//
-//	b, err := StringToBool("true")
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	fmt.Printf("Value: %v\n", b) // Output: Value: true
-//
-//	b, err = StringToBool("invalid")
-//	if err != nil {
-//	    fmt.Printf("Error: %v\n", err) // Output: Error: invalid syntax
-//	}
+//   - bool: the converted boolean value.
+//   - error: an error if the conversion fails.
 func StringToBool(value string) (bool, error) {
 	return strconv.ParseBool(value)
 }
 
-// UintToBool converts a uint value to a boolean.
-// It returns true if value is non-zero, false if value is zero.
+// UintToBool converts a uint value to a boolean value.
+//
+// UintToBool converts a uint value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: uint number to convert
+//   - value: the uint value to be converted.
 //
 // Returns:
-//   - bool: true if value is non-zero, false if value is zero
-//   - error: always returns nil as this conversion cannot fail
-//
-// Example:
-//
-//	b, err := UintToBool(1) // returns true, nil
-//	b, err := UintToBool(0) // returns false, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func UintToBool(value uint) (bool, error) {
 	return value != 0, nil
 }
 
-// Uint8ToBool converts an uint8 value to a boolean.
-// It returns true if the input value is non-zero, false otherwise.
+// Uint8ToBool converts a uint8 value to a boolean value.
+//
+// Uint8ToBool converts a uint8 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: uint8 value to convert
+//   - value: the uint8 value to be converted.
 //
 // Returns:
-//   - bool: true if value is non-zero, false if value is 0
-//   - error: always returns nil as this conversion cannot fail
-//
-// Example:
-//
-//	b, err := Uint8ToBool(1)  // returns true, nil
-//	b, err := Uint8ToBool(0)  // returns false, nil
-//	b, err := Uint8ToBool(42) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Uint8ToBool(value uint8) (bool, error) {
 	return value != 0, nil
 }
 
-// Uint16ToBool converts a uint16 value to a boolean.
+// Uint16ToBool converts a uint16 value to a boolean value.
+//
+// Uint16ToBool converts a uint16 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The uint16 value to convert to boolean
+//   - value: the uint16 value to be converted.
 //
 // Returns:
-//   - bool: true if value is not 0, false if value is 0
-//   - error: always returns nil for this function
-//
-// Example:
-//
-//	b, err := Uint16ToBool(1)    // returns true, nil
-//	b, err := Uint16ToBool(0)    // returns false, nil
-//	b, err := Uint16ToBool(1000) // returns true, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Uint16ToBool(value uint16) (bool, error) {
 	return value != 0, nil
 }
 
-// Uint32ToBool converts a uint32 value to a boolean.
-// It returns true if the input value is non-zero, false if the value is zero.
+// Uint32ToBool converts a uint32 value to a boolean value.
+//
+// Uint32ToBool converts a uint32 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: The uint32 value to convert
+//   - value: the uint32 value to be converted.
 //
 // Returns:
-//   - bool: The boolean result (true if value != 0, false if value == 0)
-//   - error: Always returns nil as this conversion cannot fail
-//
-// Example:
-//
-//	b, err := Uint32ToBool(1) // returns true, nil
-//	b, err := Uint32ToBool(0) // returns false, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Uint32ToBool(value uint32) (bool, error) {
 	return value != 0, nil
 }
 
-// Uint64ToBool converts an uint64 value to a boolean.
-// The function returns true if value is not zero, false otherwise.
+// Uint64ToBool converts a uint64 value to a boolean value.
+//
+// Uint64ToBool converts a uint64 value to a boolean value.
+// It returns true if the input value is not equal to 0, and false otherwise.
 //
 // Parameters:
-//   - value: uint64 number to convert
+//   - value: the uint64 value to be converted.
 //
 // Returns:
-//   - bool: true if value is not 0, false if value is 0
-//   - error: always returns nil for this function
-//
-// Example:
-//
-//	b, err := Uint64ToBool(1) // returns true, nil
-//	b, err := Uint64ToBool(0) // returns false, nil
+//   - bool: the converted boolean value.
+//   - error: nil.
 func Uint64ToBool(value uint64) (bool, error) {
 	return value != 0, nil
 }
