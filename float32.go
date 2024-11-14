@@ -295,9 +295,6 @@ func Int32ToFloat32(value int32) (float32, error) {
 //	}
 //	fmt.Println(result) // Output: 1234567890123456789
 func Int64ToFloat32(value int64) (float32, error) {
-	if float64(value) > math.MaxFloat32 || float64(value) < -math.MaxFloat32 {
-		return 0, errors.New("value out of range for float32")
-	}
 	return float32(value), nil
 }
 
@@ -460,8 +457,5 @@ func Uint32ToFloat32(value uint32) (float32, error) {
 //	}
 //	fmt.Println(result) // Output: 1234567890123456789
 func Uint64ToFloat32(value uint64) (float32, error) {
-	if float64(value) > math.MaxFloat32 {
-		return 0, errors.New("value exceeds float32 max limit")
-	}
 	return float32(value), nil
 }
